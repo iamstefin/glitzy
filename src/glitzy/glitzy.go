@@ -57,15 +57,23 @@ func Search() (err error) {
 		fmt.Printf("Prompt failed %v\n", err)
 		return
 	}
-	cipherText, err := hex.DecodeString(rtrmdl[i].Password)
+	cipherTextUsername, err := hex.DecodeString(rtrmdl[i].Username)
 	if err != nil {
 		log.Fatalf("%v", err)
 	}
-	plainPassword, err := utils.Decrypt([]byte(passwd), cipherText)
+	cipherTextPassword, err := hex.DecodeString(rtrmdl[i].Password)
 	if err != nil {
 		log.Fatalf("%v", err)
 	}
-	fmt.Printf("The Password for %v Is %v\n", rtrmdl[i].Username, string(plainPassword))
+	plainUsername, err := utils.Decrypt([]byte(passwd), cipherTextUsername)
+	if err != nil {
+		log.Fatalf("%v", err)
+	}
+	plainPassword, err := utils.Decrypt([]byte(passwd), cipherTextPassword)
+	if err != nil {
+		log.Fatalf("%v", err)
+	}
+	fmt.Printf("The Password for %v Is %v\n", string(plainUsername), string(plainPassword))
 	return nil
 }
 

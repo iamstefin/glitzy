@@ -23,11 +23,15 @@ func GetInfo(db *gorm.DB) *models.User {
 	ServiceName := GetNormalString("Service Name ")
 	Username := GetNormalString("Username ")
 	Password := getProtectedString("Password")
-	cipherText, err := Encrypt([]byte(MainPassword), []byte(Password))
+	cipherUsername, err := Encrypt([]byte(MainPassword), []byte(Username))
 	if err != nil {
 		log.Fatalf("%v", err)
 	}
-	return &models.User{Name: ServiceName, Username: Username, Password: hex.EncodeToString(cipherText)}
+	cipherPassword, err := Encrypt([]byte(MainPassword), []byte(Password))
+	if err != nil {
+		log.Fatalf("%v", err)
+	}
+	return &models.User{Name: ServiceName, Username: hex.EncodeToString(cipherUsername), Password: hex.EncodeToString(cipherPassword)}
 }
 
 // GetNormalString input normal text from terminal
